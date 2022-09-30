@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-helphygieneapp-dev-221020-authRole",
+      "UnauthRoleArn": "arn:aws:iam::680031783851:role/amplify-helphygieneapp-dev-221020-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::680031783851:role/amplify-helphygieneapp-dev-221020-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-helphygieneapp-dev-221020-deployment",
+      "UnauthRoleName": "amplify-helphygieneapp-dev-221020-unauthRole",
+      "StackName": "amplify-helphygieneapp-dev-221020",
+      "StackId": "arn:aws:cloudformation:us-east-1:680031783851:stack/amplify-helphygieneapp-dev-221020/3a1413f0-3309-11ed-8f21-0ebc4c96e609",
+      "AmplifyAppId": "d35bzhai37c5ri"
+    },
+    "categories": {
+      "auth": {
+        "helphygieneapp95badbe4": {}
+      }
+    }
+  }
+}
