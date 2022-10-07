@@ -2,8 +2,14 @@ import React, { component,useState } from 'react';
 import ModalSelector from 'react-native-modal-selector'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import NumericInput from 'react-native-numeric-input'
+import { DataStore } from '@aws-amplify/datastore';
+import { VolunteeringData } from '../src/models';
+
+import { Auth } from 'aws-amplify';
 
 import {
+  ActivityIndicator,
+  Pressable,
   ScrollView,
   TouchableWithoutFeedback,
     KeyboardAvoidingView,
@@ -18,7 +24,7 @@ Platform,
 } from "react-native";
 
 
-function RecordingHours(){
+function RecordingHours({navigation}){
 
   let index = 0;
   const data = [
@@ -52,29 +58,69 @@ function RecordingHours(){
     }
   };
   const changeNum=()=>{
-    console.log(num);
+    console.log("num");
   }
   const [reference, setReference] = useState(null);
-
+  const [errorMessage, showError] = useState("none")
 
   let x="Please select..."
+  
+
+  async function sendData(){
+    const user = await Auth.currentAuthenticatedUser();
+    console.log(user.attributes.email);
+    if((placeHolderName != "Please select...") && (numOfHours>0) && (activityLocation != "")){
+    changeVis(true);
+    setTimeout(() => {navigation.navigate("Dashboard");}, 1500);
+
+    console.log(x);
+    await DataStore.save(
+      new VolunteeringData({
+      "ActType": placeHolderName,
+      "ActDate": finDate,
+      "ActHours": numOfHours,
+      "ActLocation": activityLocation,
+      "Email":user.attributes.email,
+    })
+  );
+  }
+  else{
+    showError("block");
+  }
+}
+  let finDate=numChange(date);
+
+  function numChange(date1){
+    const DayOfMonth = date1.getDate();
+    const Month = date1.getMonth();
+    const Year = date1.getFullYear(); 
+    finDate = (Month+1) + "-" + (DayOfMonth) + "-" + Year;
+    console.log(finDate);
+  }
+let activityLocation="";
+let numOfHours=0;
+let nDate="";
+let pickedDate=date;
+
+const [placeHolderName,updatePlaceHolder]= useState("Please select...");
+const [isVisible, changeVis] = useState(false);
+
     return (
         <ScrollView ref={(ref) => {setReference(ref);}} rehorizontal={false}keyboardDismissMode={'on-drag'}centerContent={true}contentContainerStyle={{ flexGrow: 1 }}>
-              {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
       <Text style={styles.text1}>Activity Type</Text>
       <ModalSelector
                     data={data}
                     accessible={true}
                     scrollViewAccessibilityLabel={'Scrollable options'}
                     cancelButtonAccessibilityLabel={'Cancel Button'}
-                    onChange={(option)=>{x=option.label}}
+                    onChange={(option)=>{ x=option.label; updatePlaceHolder(option.label); }}
                     >
 
                     <TextInput
-                        style={styles.actSelector}
+                        style={styles.actSelector} 
                         placeholderTextColor='blue'
                         editable={false}
-                        placeholder={x}
+                        placeholder={placeHolderName}
                       />
                       </ModalSelector>
       <Text style={styles.text1}>Activity Date</Text>
@@ -83,11 +129,12 @@ function RecordingHours(){
       )}
       {isPickerShow && (
       <DateTimePicker
+          maximumDate={date}
           value={date}
           mode={'date'}
           display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           is24Hour={true}
-          onChange={onChange}
+          onChange={(event,date1)=>{numChange(date1)}}
           style={styles.datePicker}
         />
       )}
@@ -95,7 +142,7 @@ function RecordingHours(){
       <View style={styles.numHours}>
       <NumericInput 
             onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-            minValue={0}
+            minValue={0}  
             maxValue={24}
             totalWidth={180} 
             totalHeight={50} 
@@ -105,26 +152,54 @@ function RecordingHours(){
             textColor='blue' 
             iconStyle={{ color: 'white' }} 
             rightButtonBackgroundColor='blue' 
-            value={num}
+            value={0}
+            onChange={value=> numOfHours=value}
             leftButtonBackgroundColor='red'/>
         </View>
       <Text style={styles.text1}>Activity Location</Text>
-       <TextInput style={styles.locInput}placeholder="Enter Text Here"onPressIn={() => { reference.scrollToEnd({ animated: true }) }}/>
-       <Button title="submit" onPress={changeNum}></Button>
-       <Text style={{paddingTop:400}}> </Text>
+       <TextInput onChangeText={text=> activityLocation=text}textContentType='addressCityAndState'style={styles.locInput}placeholder="Enter Text Here"onPressIn={() => { reference.scrollToEnd({ animated: true }) }}/>
+      
+      
+       <Button title="Submit" onPress={sendData}style={styles.smbbutton}>
+
+        </Button>
         
  
 
+        <ActivityIndicator animating={isVisible}/>
 
-
-        {/* </TouchableWithoutFeedback> */}
+        <Text style={{color:'red',textAlign:'center',fontSize:'20',display:errorMessage}}>Fill Out All Fields!!!</Text>
+       <Text style={{paddingTop:400}}> </Text>
     </ScrollView>
+
 
         
     );
     };
 const styles = StyleSheet.create({
+    smbbuttonText:{
+      lineHeight: 21,
+      fontWeight: 'bold',
+      letterSpacing: 0.25,
+      color: 'blue',
+      fontSize: 16,
+
+    },
+    smbbutton:{
+      alignItems: 'center',
+      justifyContent: 'center',
+
+      borderRadius: 4,
+      backgroundColor: '#1ca2ff',
+ 
+    },
     locInput:{
+      marginLeft:'12.5%',
+      textAlignVertical: 'top',
+        alignItems:'center',
+        justifyContent:'center',
+        width:'75%',
+        borderWidth:3,
         borderRadius:10,
         borderColor:'black',
         textAlign:'center',

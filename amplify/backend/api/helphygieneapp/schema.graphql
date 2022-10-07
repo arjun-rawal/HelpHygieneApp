@@ -1,0 +1,9 @@
+type VolunteeringData @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  ActType: String!
+  ActDate: String
+  ActHours: Int
+  ActLocation: String
+  Email: String
+}
+ 

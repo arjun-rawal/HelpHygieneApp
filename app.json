@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "HelpHygieneApp",
+    "name": "HelpHygiene",
     "slug": "HelpHygieneApp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -30,6 +30,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6d831729-452a-4b34-b332-83d00da480cf"
+      }
     }
   }
 }
