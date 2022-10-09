@@ -22,9 +22,13 @@ Keyboard,
 Platform,
 
 } from "react-native";
+import { ConsoleLogger } from '@aws-amplify/core';
 
 
 function RecordingHours({navigation}){
+  let x1 =0;
+    let today = new Date();
+  console.log(today);
 
   let index = 0;
   const data = [
@@ -68,13 +72,18 @@ function RecordingHours({navigation}){
 
   async function sendData(){
     const user = await Auth.currentAuthenticatedUser();
-    console.log(user.attributes.email);
     if((placeHolderName != "Please select...") && (numOfHours>0) && (activityLocation != "")){
     changeVis(true);
     setTimeout(() => {navigation.navigate("Dashboard");}, 1500);
 
-    console.log(x);
-    await DataStore.save(
+    if (finDate==undefined){
+    (numChange(today));
+    }
+  
+ 
+
+      await DataStore.save(
+      
       new VolunteeringData({
       "ActType": placeHolderName,
       "ActDate": finDate,
@@ -88,14 +97,13 @@ function RecordingHours({navigation}){
     showError("block");
   }
 }
-  let finDate=numChange(date);
+  let finDate=numChange(today);
 
   function numChange(date1){
     const DayOfMonth = date1.getDate();
     const Month = date1.getMonth();
     const Year = date1.getFullYear(); 
     finDate = (Month+1) + "-" + (DayOfMonth) + "-" + Year;
-    console.log(finDate);
   }
 let activityLocation="";
 let numOfHours=0;
@@ -129,8 +137,9 @@ const [isVisible, changeVis] = useState(false);
       )}
       {isPickerShow && (
       <DateTimePicker
+          minimumDate="1972-10-07T21:13:12.046Z"
           maximumDate={date}
-          value={date}
+          value={today}
           mode={'date'}
           display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           is24Hour={true}
