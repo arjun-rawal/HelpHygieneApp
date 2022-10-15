@@ -26,6 +26,8 @@ import { ConsoleLogger } from '@aws-amplify/core';
 
 
 function RecordingHours({navigation}){
+  let activityLocation="";
+
   let x1 =0;
     let today = new Date();
   console.log(today);
@@ -105,7 +107,6 @@ function RecordingHours({navigation}){
     const Year = date1.getFullYear(); 
     finDate = (Month+1) + "-" + (DayOfMonth) + "-" + Year;
   }
-let activityLocation="";
 let numOfHours=0;
 let nDate="";
 let pickedDate=date;
@@ -197,7 +198,6 @@ const styles = StyleSheet.create({
     smbbutton:{
       alignItems: 'center',
       justifyContent: 'center',
-
       borderRadius: 4,
       backgroundColor: '#1ca2ff',
  
@@ -205,6 +205,7 @@ const styles = StyleSheet.create({
     locInput:{
       marginLeft:'12.5%',
       textAlignVertical: 'top',
+
         alignItems:'center',
         justifyContent:'center',
         width:'75%',

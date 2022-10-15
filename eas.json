@@ -13,6 +13,12 @@
     "production": {}
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios":{
+        "appleId": "pinkikris@gmail.com",
+        "ascAppId":"6443819400",
+        "appleTeamId":"AXZVPW836X"
+      }
+    }
   }
 }
