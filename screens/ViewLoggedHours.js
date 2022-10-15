@@ -33,11 +33,14 @@ function ViewLoggedHours({navigation}) {
   setTimeout(() => getUserInfo(), 1500);
   let x = new Array("Type","Date","Hours","Location");
   let t = 4;
-
+  let aasd = true;
   async function getUserInfo() {
     changeVis(false);
     const user = await Auth.currentAuthenticatedUser();
-    if (user.attributes.email == "arawalarjun@gmail.com"){adminVis("Block")}
+    if ((user.attributes.email == "arawalarjun@gmail.com") && (aasd)){
+      adminVis("Block");
+      aasd=false;
+    }
     const VolunteeringDataRead = await DataStore.query(VolunteeringData, c => c.Email("eq", user.attributes.email));
 
     for(let i =0;i<VolunteeringDataRead.length;i++){
@@ -58,7 +61,9 @@ function ViewLoggedHours({navigation}) {
   return (
     <View>
       <ActivityIndicator animating={isVisible}/>
-      <Button title="viewAll" isVisible={adminVis}></Button>
+      <View style={{display:adminButton}}>
+      <Button title="viewAll"></Button>
+      </View>
       <Text>Total Hours: {totalAmtOfHrs}</Text> 
       <GridFlatList
         data={gridData}

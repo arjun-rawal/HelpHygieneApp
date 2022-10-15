@@ -23,6 +23,7 @@
     "@rneui/themed": "^4.0.0-rc.6",
     "amazon-cognito-identity-js": "^5.2.10",
     "amplify": "^0.0.11",
+    "apsl-react-native-button": "^3.1.1",
     "aws": "^0.0.3-2",
     "aws-amplify": "^4.3.37",
     "aws-amplify-react-native": "^6.0.5",
