@@ -66,6 +66,7 @@ function ViewLoggedHours({navigation}) {
       </View>
       <Text>Total Hours: {totalAmtOfHrs}</Text> 
       <GridFlatList
+      showsVerticalScrollIndicator={true}
         data={gridData}
         renderItem={(item) => (<View style><Text style={{fontSize:'15',color:'black'}}>{item}</Text></View>)}
         gap={20}

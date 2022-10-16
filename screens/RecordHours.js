@@ -45,9 +45,10 @@ function RecordingHours({navigation}){
   let num=0;
 
 
-
+  const [typeValue, setTypeValue] = useState(0);
   const [isPickerShow, setIsPickerShow] = useState(false);
   const [date, setDate] = useState(new Date(Date.now()));
+  const [hoursNum, setHours] = useState(0);
 
   const showPicker = () => {
     setIsPickerShow(true);
@@ -68,13 +69,15 @@ function RecordingHours({navigation}){
   }
   const [reference, setReference] = useState(null);
   const [errorMessage, showError] = useState("none")
-
+  const [activityLoc, changeLoc] = useState("");
   let x="Please select..."
   
 
   async function sendData(){
     const user = await Auth.currentAuthenticatedUser();
-    if((placeHolderName != "Please select...") && (numOfHours>0) && (activityLocation != "")){
+    
+    if((typeValue != 0) && (hoursNum>0) && (activityLoc != "")){
+      console.log("works");
     changeVis(true);
     setTimeout(() => {navigation.navigate("Dashboard");}, 1500);
 
@@ -89,8 +92,8 @@ function RecordingHours({navigation}){
       new VolunteeringData({
       "ActType": placeHolderName,
       "ActDate": finDate,
-      "ActHours": numOfHours,
-      "ActLocation": activityLocation,
+      "ActHours": hoursNum,
+      "ActLocation": activityLoc,
       "Email":user.attributes.email,
     })
   );
@@ -122,7 +125,7 @@ const [isVisible, changeVis] = useState(false);
                     accessible={true}
                     scrollViewAccessibilityLabel={'Scrollable options'}
                     cancelButtonAccessibilityLabel={'Cancel Button'}
-                    onChange={(option)=>{ x=option.label; updatePlaceHolder(option.label); }}
+                    onChange={(option)=>{ x=option.label; updatePlaceHolder(option.label); setTypeValue(1);}}
                     >
 
                     <TextInput
@@ -163,11 +166,11 @@ const [isVisible, changeVis] = useState(false);
             iconStyle={{ color: 'white' }} 
             rightButtonBackgroundColor='blue' 
             value={0}
-            onChange={value=> numOfHours=value}
+            onChange={value=> setHours(value)}
             leftButtonBackgroundColor='red'/>
         </View>
       <Text style={styles.text1}>Activity Location</Text>
-       <TextInput onChangeText={text=> activityLocation=text}textContentType='addressCityAndState'style={styles.locInput}placeholder="Enter Text Here"onPressIn={() => { reference.scrollToEnd({ animated: true }) }}/>
+       <TextInput onChangeText={text=> changeLoc(text)}textContentType='addressCityAndState'style={styles.locInput}placeholder="Enter Text Here"onPressIn={() => { reference.scrollToEnd({ animated: true }) }}/>
       
       
        <Button title="Submit" onPress={sendData}style={styles.smbbutton}>
